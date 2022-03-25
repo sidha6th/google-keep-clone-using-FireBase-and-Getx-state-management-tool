@@ -4,15 +4,14 @@ import 'package:google_keep_clone/controller/note_controller.dart';
 import 'package:google_keep_clone/screens/views/add_or_edit_screen/add_or_edit_screen.dart';
 import 'package:google_keep_clone/screens/views/home_screen/widgets/appbar.dart';
 import 'package:google_keep_clone/screens/views/widgets/common_main_data_widget/main_data_widget.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
-
   @override
   Widget build(BuildContext context) {
-    NoteController controller = Get.put(
-      NoteController(),
-    );
+   // NoteController controller = Get.find<NoteController>();
+    NoteController.searchText.value = '';
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
@@ -20,6 +19,7 @@ class HomeScreen extends StatelessWidget {
         //shrinkWrap: true,
         slivers: <Widget>[
           const SliverAppBar(
+            automaticallyImplyLeading: false,
             floating: true,
             elevation: 0,
             foregroundColor: Colors.transparent,
@@ -31,7 +31,11 @@ class HomeScreen extends StatelessWidget {
               child: Appbarwidget(),
             ),
           ),
-          MainDataWidget(size: size, controller: controller),
+          MainDataWidget(
+            forSearch: false,
+            //searchText: controller.searchText,
+            size: size,
+          ),
         ],
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.miniEndDocked,
@@ -41,10 +45,14 @@ class HomeScreen extends StatelessWidget {
         ),
         onPressed: () {
           Get.to(
-            const AddOrEditScreen(),
+            () => const AddOrEditScreen(),
           );
         },
-        child: const Icon(Icons.add, color: Colors.black,size: 30,),
+        child: const Icon(
+          Icons.add,
+          color: Colors.black,
+          size: 30,
+        ),
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(
             Radius.circular(
@@ -61,7 +69,12 @@ class HomeScreen extends StatelessWidget {
                 -0,
                 -1,
               ),
-              color: Color.fromARGB(255, 235, 234, 234),
+              color: Color.fromARGB(
+                255,
+                235,
+                234,
+                234,
+              ),
               blurRadius: 2,
               blurStyle: BlurStyle.inner,
               spreadRadius: 1,

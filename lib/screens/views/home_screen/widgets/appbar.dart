@@ -4,7 +4,6 @@ import 'package:google_keep_clone/constants/colors.dart';
 import 'package:google_keep_clone/controller/note_controller.dart';
 import 'package:google_keep_clone/screens/views/search_screen/search_screen.dart';
 
-
 class Appbarwidget extends StatelessWidget {
   const Appbarwidget({Key? key}) : super(key: key);
 
@@ -35,10 +34,15 @@ class Appbarwidget extends StatelessWidget {
                   color: grey,
                 ),
               ),
-               Expanded(
+              Expanded(
                 child: GestureDetector(
-                  onTap: () => Get.to(const SearchScreen()),
-                  child:const Text(
+                  onTap: () {
+                        NoteController.searchText.value='';
+                    Get.to(() => const SearchScreen(
+                          forsearch: true,
+                        ));
+                  },
+                  child: const Text(
                     'search your notes',
                   ),
                 ),
@@ -58,9 +62,16 @@ class Appbarwidget extends StatelessWidget {
                   ),
                 );
               }),
-              CircleAvatar(
-                radius: size.shortestSide * 0.04,
-                backgroundColor: Colors.green,
+              InkWell(
+                onTap: () {
+                  controller.signOut();
+                },
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                    NoteController.userPhoto,
+                  ),
+                  radius: size.shortestSide * 0.04,
+                ),
               ),
             ],
           ),

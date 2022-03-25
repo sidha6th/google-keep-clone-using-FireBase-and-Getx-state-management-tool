@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_keep_clone/screens/views/home_screen/home_screen.dart';
+import 'package:google_keep_clone/screens/views/splash_screen/splash_screen.dart';
  Future main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
  await Firebase.initializeApp();  
@@ -18,7 +19,7 @@ class MyApp extends StatelessWidget {
     
     return const GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: HomeScreen(),
+      home: SplashScreen(),
     );
   }
 }
