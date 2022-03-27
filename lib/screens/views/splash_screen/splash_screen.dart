@@ -21,12 +21,10 @@ class SplashScreen extends StatelessWidget {
                 child: CircularProgressIndicator(),
               );
             } else if (snapshot.connectionState == ConnectionState.done) {
+                return controller.isSigned == false
+                    ? const LoginScreen()
+                    : const HomeScreen();
               
-              if (controller.isSigned == true) {
-                return const HomeScreen();
-              } else {
-                return const LoginScreen();
-              }
             } else {
               return const LoginScreen();
             }

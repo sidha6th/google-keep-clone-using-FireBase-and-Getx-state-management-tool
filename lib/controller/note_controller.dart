@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_keep_clone/model/model.dart';
+import 'package:google_keep_clone/screens/views/home_screen/home_screen.dart';
 import 'package:google_keep_clone/screens/views/login_page/login_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -18,19 +20,40 @@ class NoteController extends GetxController {
   static TextEditingController content = TextEditingController();
   List<NoteModel?> searchlist = [];
   bool isSigned = false;
-  //================ obs variable =================//
+  //================ RX variables =================//
   RxBool isGrid = false.obs;
   static RxString searchText = ''.obs;
   RxInt index = 0.obs;
-  //============ signin ===================//
+  //================ Rx variables =================//
 
+//!!!!!!!!!!!!!!!!!!!!!!!!! functions !!!!!!!!!!!!!!!!!!!!!!!//
+
+  //============ Google Signout Function =================//
+  signOut() async {
+    googleData = await GoogleSignIn().signOut();
+    Get.off(
+      const LoginScreen(),
+    );
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    await pref.remove('userEmail');
+    await pref.remove('userName');
+    await pref.remove('userImage');
+    isSigned = false;
+  }
+  //============ End of Google Signout Function =================//
+
+//============ Google Signin Function ===================//
   signIn() async {
-    try {
-      googleData = await GoogleSignIn().signIn();
-    } on PlatformException {
-      debugPrint('please trun on the network');
+    googleData = await GoogleSignIn().signIn();
+    if (googleData == null) {
+      return;
     }
-    if (googleData == null) return;
+    // final GoogleSignInAuthentication googleAuth =
+    //     await googleData!.authentication;
+    // final AuthCredential credential = GoogleAuthProvider.credential(
+    //     idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+    // await FirebaseAuth.instance.signInWithCredential(credential);
+
     SharedPreferences pref = await SharedPreferences.getInstance();
     await pref.setString('userEmail', googleData!.email);
     await pref.setString('userName', googleData!.displayName ?? '');
@@ -38,24 +61,20 @@ class NoteController extends GetxController {
     userEmail = googleData!.email;
     userName = googleData!.displayName ?? '';
     userPhoto = googleData!.photoUrl ?? '';
-  }
-  //============ signin ===================//
-
-  //============ signOut =================//
-  signOut() async {
-    googleData = await GoogleSignIn().signOut();
-    Get.off(
-      const LoginScreen(),
+    isSigned = true;
+    Get.to(
+      () => const HomeScreen(),
     );
   }
-  //============ signin =================//
+  //============ End of Google Signin Function ===================//
 
+  //============ checking the user signed in or not ===================//
   checkIsSignedOrNot() async {
-    bool _signedOrNot = await GoogleSignIn().isSignedIn();
-    if (_signedOrNot == false) {
-      isSigned = false;
+    isSigned = await GoogleSignIn().isSignedIn();
+    if (isSigned == false) {
+      await signIn();
+      return;
     }
-    isSigned = _signedOrNot;
     SharedPreferences pref = await SharedPreferences.getInstance();
     userEmail = pref.getString('userEmail')!;
     userName = pref.getString('userName')!;
@@ -64,7 +83,9 @@ class NoteController extends GetxController {
       const Duration(milliseconds: 500),
     );
   }
+  //============ checking the user signed in or not ===================//
 
+  //===================== note creation ====================//
   static Future<String> createNote(NoteModel note) async {
     final fireStore = FirebaseFirestore.instance
         .collection(
@@ -77,7 +98,9 @@ class NoteController extends GetxController {
     );
     return fireStore.id;
   }
+  //================= end of note creation =================//
 
+  //================= getting notes =================//
   static Stream<List<NoteModel>> getNote() =>
       FirebaseFirestore.instance.collection(userEmail).snapshots().map(
             (snapshot) => snapshot.docs
@@ -88,7 +111,9 @@ class NoteController extends GetxController {
                 )
                 .toList(),
           );
+  //=============== end of get note  =================//
 
+  //================= Note updation =================//
   static Future updateNote(NoteModel note) async {
     final noteInstance = FirebaseFirestore.instance
         .collection(
@@ -101,7 +126,9 @@ class NoteController extends GetxController {
       note.toJson(),
     );
   }
+  //============= end of note Updation ==============//
 
+  //================= Note Deletion =================//
   static Future deleteNote(NoteModel note) async {
     await FirebaseFirestore.instance
         .collection(
@@ -112,7 +139,9 @@ class NoteController extends GetxController {
         )
         .delete();
   }
+  //================= End of Note Deletion =================//
 
+  //================= Note Searching function (for Grid view)=================//
   void getSearchData(AsyncSnapshot<List<NoteModel>> snapshot) {
     searchlist.clear();
     if (searchText.isEmpty) {
@@ -131,4 +160,5 @@ class NoteController extends GetxController {
       }
     }
   }
+  //================= End of Note Searching function =================//
 }

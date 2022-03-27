@@ -10,13 +10,13 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
-   // NoteController controller = Get.find<NoteController>();
-    NoteController.searchText.value = '';
+    // NoteController controller = Get.find<NoteController>();
+    //NoteController.searchText.value = '';
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
       body: CustomScrollView(
-        //shrinkWrap: true,
+        shrinkWrap: true,
         slivers: <Widget>[
           const SliverAppBar(
             automaticallyImplyLeading: false,
@@ -33,7 +33,6 @@ class HomeScreen extends StatelessWidget {
           ),
           MainDataWidget(
             forSearch: false,
-            //searchText: controller.searchText,
             size: size,
           ),
         ],

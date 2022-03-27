@@ -28,21 +28,22 @@ class MainDataWidget extends StatelessWidget {
       builder: (context, AsyncSnapshot<List<NoteModel>> snapshot) {
         return SliverToBoxAdapter(
           child: forSearch == false
-              // ignore: prefer_is_empty
-              ? snapshot.data?.length == 0
-                  ? SizedBox(
-                      height: size.height * 0.8,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Icon(
-                            Icons.lightbulb_outline,
-                            color: Colors.yellow,
-                            size: size.width * 0.3,
-                          ),
-                          const Text('Notes you add appear here'),
-                        ],
-                      ),
+              ? (snapshot.data == null || snapshot.data!.isEmpty)
+                  ? Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        SizedBox(
+                          height: size.shortestSide / 1.8,
+                        ),
+                        Icon(
+                          Icons.lightbulb_outline,
+                          color: Colors.yellow,
+                          size: size.width * 0.3,
+                        ),
+                        const Text(
+                          'Notes you add appear here',
+                        ),
+                      ],
                     )
                   : Obx(
                       () {
