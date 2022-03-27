@@ -10,25 +10,29 @@ class HomeScreen extends StatelessWidget {
   const HomeScreen({Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
+    GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     // NoteController controller = Get.find<NoteController>();
-    //NoteController.searchText.value = '';
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
+      key: _scaffoldKey,
+      drawer: DrawerWidget(size: size),
       backgroundColor: Colors.white,
       body: CustomScrollView(
         shrinkWrap: true,
         slivers: <Widget>[
-          const SliverAppBar(
+          SliverAppBar(
             automaticallyImplyLeading: false,
             floating: true,
             elevation: 0,
             foregroundColor: Colors.transparent,
             backgroundColor: Colors.transparent,
             flexibleSpace: Padding(
-              padding: EdgeInsets.symmetric(
+              padding: const EdgeInsets.symmetric(
                 horizontal: 20,
               ),
-              child: Appbarwidget(),
+              child: Appbarwidget(
+                scaffoldKey: _scaffoldKey,
+              ),
             ),
           ),
           MainDataWidget(
@@ -134,6 +138,105 @@ class HomeScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class DrawerWidget extends StatelessWidget {
+  const DrawerWidget({
+    required this.size,
+    Key? key,
+  }) : super(key: key);
+  final Size size;
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      backgroundColor: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Image.network(
+              'https://www.freepnglogos.com/uploads/google-logo-png/google-logo-png-google-sva-scholarship-20.png',
+              width: size.shortestSide / 3,
+              height: size.shortestSide / 3,
+            ),
+          ),
+          ListView(
+            shrinkWrap: true,
+            children: const <Widget>[
+              DraweListItem(
+                icon: Icons.lightbulb_outline,
+                label: 'Notes',
+              ),
+              DraweListItem(
+                icon: Icons.notifications_none,
+                label: 'Reminders',
+              ),
+              DraweListItem(
+                icon: Icons.add,
+                label: 'Create new label',
+              ),
+              DraweListItem(
+                icon: Icons.archive_outlined,
+                label: 'Archive',
+              ),
+              DraweListItem(
+                icon: Icons.delete_outline,
+                label: 'Deleted',
+              ),
+              DraweListItem(
+                icon: Icons.settings_outlined,
+                label: 'Setings',
+              ),
+              DraweListItem(
+                icon: Icons.help_outline,
+                label: 'Help & feedback',
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class DraweListItem extends StatelessWidget {
+  const DraweListItem({
+    required this.icon,
+    required this.label,
+    Key? key,
+  }) : super(key: key);
+  final IconData icon;
+  final String label;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Row(
+          children: <Widget>[
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Icon(
+                icon,
+                color: Colors.black,
+                size: 25,
+              ),
+            ),
+            Text(
+              label,
+              style: const TextStyle(
+                color: Colors.black,
+                fontSize: 22,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 20,),
+      ],
     );
   }
 }

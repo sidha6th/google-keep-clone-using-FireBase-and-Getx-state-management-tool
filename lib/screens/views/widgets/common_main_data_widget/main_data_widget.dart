@@ -25,8 +25,8 @@ class MainDataWidget extends StatelessWidget {
     NoteController controller = Get.find<NoteController>();
     return StreamBuilder<List<NoteModel>>(
       stream: NoteController.getNote(),
-      builder: (context, AsyncSnapshot<List<NoteModel>> snapshot) {
-        return SliverToBoxAdapter(
+      builder: (context, AsyncSnapshot<List<NoteModel>> snapshot) =>
+       SliverToBoxAdapter(
           child: forSearch == false
               ? (snapshot.data == null || snapshot.data!.isEmpty)
                   ? Column(
@@ -46,8 +46,7 @@ class MainDataWidget extends StatelessWidget {
                       ],
                     )
                   : Obx(
-                      () {
-                        return controller.isGrid.value == true
+                      () => controller.isGrid.value == true
                             ? GridViewWidget(
                                 snapshot: snapshot,
                                 forSearch: false,
@@ -57,8 +56,7 @@ class MainDataWidget extends StatelessWidget {
                                 snapshot: snapshot,
                                 forSearch: false,
                                 searchText: searchText?.value ?? '',
-                              );
-                      },
+                              ),
                     )
               : controller.isGrid.value == true
                   ? Obx(
@@ -75,8 +73,7 @@ class MainDataWidget extends StatelessWidget {
                         searchText: searchText!.value,
                       ),
                     ),
-        );
-      },
+        ),
     );
   }
 }

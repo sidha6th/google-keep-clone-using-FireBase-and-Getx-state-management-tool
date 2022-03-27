@@ -5,7 +5,8 @@ import 'package:google_keep_clone/controller/note_controller.dart';
 import 'package:google_keep_clone/screens/views/search_screen/search_screen.dart';
 
 class Appbarwidget extends StatelessWidget {
-  const Appbarwidget({Key? key}) : super(key: key);
+  const Appbarwidget({required this.scaffoldKey, Key? key}) : super(key: key);
+  final GlobalKey<ScaffoldState> scaffoldKey;
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +29,9 @@ class Appbarwidget extends StatelessWidget {
           child: Row(
             children: [
               IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  scaffoldKey.currentState?.openDrawer();
+                },
                 icon: const Icon(
                   Icons.menu,
                   color: grey,
@@ -37,7 +40,7 @@ class Appbarwidget extends StatelessWidget {
               Expanded(
                 child: GestureDetector(
                   onTap: () {
-                        NoteController.searchText.value='';
+                    NoteController.searchText.value = '';
                     Get.to(() => const SearchScreen(
                           forsearch: true,
                         ));
