@@ -21,11 +21,15 @@ class Appbarwidget extends StatelessWidget {
         width: size.width * 0.9,
         height: size.height * 0.06,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(30),
+          borderRadius: BorderRadius.circular(
+            30,
+          ),
           color: darkWhite,
         ),
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 6),
+          padding: const EdgeInsets.symmetric(
+            horizontal: 6,
+          ),
           child: Row(
             children: [
               IconButton(
@@ -40,31 +44,34 @@ class Appbarwidget extends StatelessWidget {
               Expanded(
                 child: GestureDetector(
                   onTap: () {
-                    NoteController.searchText.value = '';
-                    Get.to(() => const SearchScreen(
-                          forsearch: true,
-                        ));
+                    Get.to(
+                      () => const SearchScreen(
+                        forsearch: true,
+                      ),
+                    );
                   },
                   child: const Text(
                     'search your notes',
                   ),
                 ),
               ),
-              Obx(() {
-                return IconButton(
-                  onPressed: () {
-                    controller.isGrid.value == true
-                        ? controller.isGrid.value = false
-                        : controller.isGrid.value = true;
-                  },
-                  icon: Icon(
-                    controller.isGrid.value == false
-                        ? Icons.grid_view_outlined
-                        : Icons.view_agenda_outlined,
-                    color: grey,
-                  ),
-                );
-              }),
+              Obx(
+                () {
+                  return IconButton(
+                    onPressed: () {
+                      controller.isGrid.value == true
+                          ? controller.isGrid.value = false
+                          : controller.isGrid.value = true;
+                    },
+                    icon: Icon(
+                      controller.isGrid.value == false
+                          ? Icons.grid_view_outlined
+                          : Icons.view_agenda_outlined,
+                      color: grey,
+                    ),
+                  );
+                },
+              ),
               InkWell(
                 onTap: () {
                   controller.signOut();

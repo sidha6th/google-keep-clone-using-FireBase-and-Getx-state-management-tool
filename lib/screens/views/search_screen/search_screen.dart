@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_keep_clone/controller/note_controller.dart';
-import 'package:google_keep_clone/screens/views/widgets/common_main_data_widget/main_data_widget.dart';
+import 'package:google_keep_clone/screens/views/widgets/main_data_widget.dart';
 
 class SearchScreen extends StatefulWidget {
   const SearchScreen({
@@ -18,7 +18,7 @@ class SearchScreen extends StatefulWidget {
 class _SearchScreenState extends State<SearchScreen> {
   @override
   void dispose() {
-        NoteController.searchText.value = '';
+    NoteController.searchText.value = '';
     super.dispose();
   }
 
@@ -39,7 +39,12 @@ class _SearchScreenState extends State<SearchScreen> {
               ),
             ),
             elevation: 0,
-            backgroundColor: const Color.fromARGB(255, 218, 216, 216),
+            backgroundColor: const Color.fromARGB(
+              255,
+              218,
+              216,
+              216,
+            ),
             centerTitle: true,
             leading: IconButton(
               icon: const Icon(
@@ -52,11 +57,11 @@ class _SearchScreenState extends State<SearchScreen> {
             ),
             title: TextField(
               onChanged: (String value) {
-                    NoteController.searchText.value = value;
+                NoteController.searchText.value = value;
                 controller.searchlist.clear();
               },
               onEditingComplete: () {
-                    NoteController.searchText.value = '';
+                NoteController.searchText.value = '';
               },
               cursorColor: Colors.black,
               decoration: const InputDecoration(
@@ -68,7 +73,7 @@ class _SearchScreenState extends State<SearchScreen> {
           MainDataWidget(
             forSearch: widget.forsearch,
             size: size,
-            searchText:     NoteController.searchText,
+            searchText: NoteController.searchText,
           ),
         ],
       ),

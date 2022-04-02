@@ -2,24 +2,26 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:google_keep_clone/model/model.dart';
 import 'package:google_keep_clone/screens/views/home_screen/home_screen.dart';
 import 'package:google_keep_clone/screens/views/login_page/login_screen.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class NoteController extends GetxController {
+  final GetStorage box = GetStorage();
+
   GoogleSignInAccount? googleData;
-  static String userEmail = 'a';
-  static String userPhoto = '';
-  static String userName = '';
+  List<NoteModel?> searchlist = [];
+  Map<String, dynamic> map = {};
+  bool isSigned = false;
   ScrollController scrollController = ScrollController();
   static TextEditingController title = TextEditingController();
   static TextEditingController content = TextEditingController();
-  List<NoteModel?> searchlist = [];
-  bool isSigned = false;
+  static String userEmail = 'a';
+  static String userPhoto = '';
+  static String userName = '';
   //================ RX variables =================//
   RxBool isGrid = false.obs;
   static RxString searchText = ''.obs;
@@ -34,12 +36,10 @@ class NoteController extends GetxController {
     Get.off(
       const LoginScreen(),
     );
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    await pref.remove('userEmail');
-    await pref.remove('userName');
-    await pref.remove('userImage');
+    await box.erase();
     isSigned = false;
   }
+
   //============ End of Google Signout Function =================//
 
 //============ Google Signin Function ===================//
@@ -48,16 +48,15 @@ class NoteController extends GetxController {
     if (googleData == null) {
       return;
     }
-    // final GoogleSignInAuthentication googleAuth =
-    //     await googleData!.authentication;
-    // final AuthCredential credential = GoogleAuthProvider.credential(
-    //     idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
-    // await FirebaseAuth.instance.signInWithCredential(credential);
+    final GoogleSignInAuthentication googleAuth =
+        await googleData!.authentication;
+    final AuthCredential credential = GoogleAuthProvider.credential(
+        idToken: googleAuth.idToken, accessToken: googleAuth.accessToken);
+    await FirebaseAuth.instance.signInWithCredential(credential);
 
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    await pref.setString('userEmail', googleData!.email);
-    await pref.setString('userName', googleData!.displayName ?? '');
-    await pref.setString('userImage', googleData!.photoUrl ?? '');
+    await box.write('userEmail', googleData!.email);
+    await box.write('userName', googleData!.displayName);
+    await box.write('userImage', googleData!.photoUrl);
     userEmail = googleData!.email;
     userName = googleData!.displayName ?? '';
     userPhoto = googleData!.photoUrl ?? '';
@@ -75,12 +74,14 @@ class NoteController extends GetxController {
       await signIn();
       return;
     }
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    userEmail = pref.getString('userEmail')!;
-    userName = pref.getString('userName')!;
-    userPhoto = pref.getString('userImage')!;
+
+    userEmail = box.read('userEmail');
+    userName = box.read('userName');
+    userPhoto = box.read('userImage')!;
     Future.delayed(
-      const Duration(milliseconds: 500),
+      const Duration(
+        milliseconds: 500,
+      ),
     );
   }
   //============ checking the user signed in or not ===================//
@@ -151,8 +152,11 @@ class NoteController extends GetxController {
         for (var i = 0; i < snapshot.data!.length; i++) {
           if (snapshot.data?[i] != null) {
             if (snapshot.data![i].title.toString().toLowerCase().contains(
-                  searchText.toLowerCase(),
-                )) {
+                      searchText.toLowerCase(),
+                    ) ||
+                snapshot.data![i].content.toString().toLowerCase().contains(
+                      searchText.toLowerCase(),
+                    )) {
               searchlist.add(snapshot.data![i]);
             }
           }
@@ -161,4 +165,5 @@ class NoteController extends GetxController {
     }
   }
   //================= End of Note Searching function =================//
+
 }

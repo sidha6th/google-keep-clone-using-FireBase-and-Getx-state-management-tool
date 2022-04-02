@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:get/get.dart';
-import 'package:google_keep_clone/constants/colors.dart';
 import 'package:google_keep_clone/controller/note_controller.dart';
 import 'package:google_keep_clone/model/model.dart';
-import 'package:google_keep_clone/screens/views/home_screen/widgets/data_card.dart';
+import 'package:google_keep_clone/screens/views/home_screen/widgets/data_card_widget.dart';
 
 class GridViewWidget extends StatelessWidget {
   const GridViewWidget({
     required this.snapshot,
-    required this.forSearch ,
+    required this.forSearch,
     this.searchText = '',
     Key? key,
   }) : super(key: key);
@@ -45,7 +44,9 @@ class GridViewWidget extends StatelessWidget {
             ),
           )
         : Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 10,
+            ),
             child: MasonryGridView.builder(
               controller: controller.scrollController,
               itemCount: forSearch == true
@@ -76,6 +77,4 @@ class GridViewWidget extends StatelessWidget {
             ),
           );
   }
-
-  
 }

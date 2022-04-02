@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_keep_clone/controller/note_controller.dart';
 import 'package:google_keep_clone/model/model.dart';
-import 'package:google_keep_clone/screens/views/home_screen/widgets/data_card.dart';
+import 'package:google_keep_clone/screens/views/home_screen/widgets/data_card_widget.dart';
 
 class ListVewwidget extends StatelessWidget {
   const ListVewwidget(
